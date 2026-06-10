@@ -41,7 +41,7 @@ If you'd rather not type 40 commands by hand, there's a script for that.
 After the [Prerequisites](#prerequisites) below:
 
 ```bash
-git clone https://github.com/<your-username>/libfprint-elan-04f3-0c4b-tod ~/elan-fingerprint-fix
+git clone https://github.com/Abishek-Pechiappan/libfprint-elan-04f3-0c4b-tod ~/elan-fingerprint-fix
 cd ~/elan-fingerprint-fix
 ./scripts/install.sh
 ```
@@ -77,10 +77,8 @@ cd /tmp/yay && makepkg -si
 Finally, **clone this repo** so you have the patch file from Step 3:
 
 ```bash
-git clone https://github.com/<your-username>/libfprint-elan-04f3-0c4b-tod ~/elan-fingerprint-fix
+git clone https://github.com/Abishek-Pechiappan/libfprint-elan-04f3-0c4b-tod ~/elan-fingerprint-fix
 ```
-(swap `<your-username>` for wherever this is actually hosted — or just copy
-the `patches/` folder over by hand, no judgement.)
 
 ---
 
