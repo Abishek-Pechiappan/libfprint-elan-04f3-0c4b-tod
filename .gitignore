@@ -1,0 +1,6 @@
+# Build artifacts (the scripts build under /tmp, but just in case)
+build/
+pkg/
+*.pkg.tar.zst
+*.pkg.tar.xz
+*.log

@@ -1,0 +1,21 @@
+diff --git a/libfprint/tod/libfprint-tod.ver.in b/libfprint/tod/libfprint-tod.ver.in
+index e88eb04..9520f28 100644
+--- a/libfprint/tod/libfprint-tod.ver.in
++++ b/libfprint/tod/libfprint-tod.ver.in
+@@ -174,16 +174,12 @@ global:
+     fpi_ssm_get_data;
+     fpi_ssm_get_error;
+     fpi_ssm_jump_to_state;
+-    fpi_ssm_jump_to_state_delayed;
+     fpi_ssm_jump_to_state_delayed_1_90;
+     fpi_ssm_mark_completed;
+-    fpi_ssm_mark_completed_delayed;
+     fpi_ssm_mark_completed_delayed_1_90;
+     fpi_ssm_mark_failed;
+-    fpi_ssm_new_full;
+     fpi_ssm_new_full_1_90;
+     fpi_ssm_next_state;
+-    fpi_ssm_next_state_delayed;
+     fpi_ssm_next_state_delayed_1_90;
+     fpi_ssm_set_data;
+     fpi_ssm_start;
