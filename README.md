@@ -33,6 +33,21 @@ of the box — it has its own bug. So this repo gives you:
 If your device ID is **not** `04f3:0c4b` — sorry, wrong README. Check the
 "Background" section for pointers, then go find your own rabbit hole.
 
+> **Tested on**: Arch Linux, `libfprint-tod-git` v1.95.1+tod1
+> (`3v1n0/libfprint#tod` branch), as of June 2026. If `yay -S
+> libfprint-2-tod1-elan` just works for you out of the box now, the upstream
+> bug has probably been fixed — congrats, close this tab and enjoy your
+> fingerprint reader. Otherwise, welcome, you'll fit right in here.
+
+## Contents
+
+- [Quick install (script)](#quick-install-script)
+- [Prerequisites](#prerequisites)
+- [Installation — step by step](#installation--step-by-step)
+- [Background](#background)
+- [Caveats / maintenance](#caveats--maintenance)
+- [Acknowledgements](#acknowledgements)
+
 ---
 
 ## Quick install (script)
@@ -394,3 +409,27 @@ remain correctly versioned via the `_1_90`-suffixed wrapper symbols and the
   ```bash
   sudo faillock --user $USER --reset
   ```
+
+---
+
+## Acknowledgements
+
+This repo doesn't invent anything new — it just glues together (and unbreaks)
+the work of people who did the actual hard part:
+
+- [3v1n0](https://gitlab.freedesktop.org/3v1n0/libfprint) for the
+  `libfprint-tod` branch and the whole TOD shim architecture.
+- [TonyHoyle](https://github.com/TonyHoyle/libfprint-2-tod1-elan) for digging
+  the proprietary ELAN driver out of Lenovo's Ubuntu packages and making it
+  installable elsewhere.
+- Lenovo, technically, for writing a driver that works — just only for the
+  one distro they tested on.
+
+---
+
+## Got this working (or not)?
+
+This was tested on one specific laptop, so if you've got the same `04f3:0c4b`
+sensor on different hardware, an issue or PR saying "yep, worked for me too"
+(or "nope, here's what broke") is genuinely useful — it's the only way this
+README gets better instead of slowly fossilizing into a historical document.
