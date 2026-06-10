@@ -239,7 +239,44 @@ sudo pacman -U ../libfprint-2-tod1-elan-0.0.1-2-x86_64.pkg.tar.zst
 `libcrypto.so=1.1` comes from `openssl-1.1` — grab it first if you don't have
 it: `sudo pacman -S openssl-1.1`.
 
-### Step 7: Reload udev & restart fprintd
+### Step 7: Fix the udev rule that the package forgot to enable, then reload udev & restart fprintd
+
+Here's a fun one. `libfprint-2-tod1-elan` ships its udev rule
+(`/usr/lib/udev/rules.d/60-libfprint-2-tod1-elan.rules`) with **every single
+line commented out**:
+
+```
+# SUBSYSTEM=="usb", ATTRS{idVendor}=="04f3", ATTRS{idProduct}=="0c4b", ATTRS{dev}=="*", TEST=="power/control", ATTR{power/control}="auto", MODE="0660", GROUP="plugdev"
+# SUBSYSTEM=="usb", ATTRS{idVendor}=="04f3", ATTRS{idProduct}=="0c4b", ENV{LIBFPRINT_DRIVER}="Elan Fingerprint Sensor"
+```
+
+That second line is the whole point of this driver — it's the
+`LIBFPRINT_DRIVER` hint that tells libfprint "use the TOD driver for this
+device, not the lying built-in `elan` one." With it commented out, libfprint
+falls back to probing the device with the broken `elan` driver whenever it
+actually has to *do* something with the sensor.
+
+The annoying part: this doesn't show up in Step 8 the way you'd expect.
+`fprintd-list` and even `fprintd-enroll`/`fprintd-verify` run by hand right
+after install can look totally fine — those are mostly reading stored data,
+not talking to hardware in real time. It's PAM-driven verification (SDDM
+greeter, `sudo`, `hyprlock`) that hangs for a full ~30 seconds and then
+silently falls back to your password, with `journalctl -u fprintd` quietly
+screaming `g_usb_device_bulk_transfer_finish failed: transfer timed out` —
+the wrong driver got probed for the live scan.
+
+Fix it with an **override** file in `/etc/udev/rules.d/` (don't touch the
+package's copy in `/usr/lib/udev/rules.d/` — pacman will just stomp it back
+to "commented out" on the next update):
+
+```bash
+sudo tee /etc/udev/rules.d/60-libfprint-2-tod1-elan.rules > /dev/null <<'EOF'
+SUBSYSTEM=="usb", ATTRS{idVendor}=="04f3", ATTRS{idProduct}=="0c4b", ATTRS{dev}=="*", TEST=="power/control", ATTR{power/control}="auto", MODE="0660", GROUP="plugdev"
+SUBSYSTEM=="usb", ATTRS{idVendor}=="04f3", ATTRS{idProduct}=="0c4b", ENV{LIBFPRINT_DRIVER}="Elan Fingerprint Sensor"
+EOF
+```
+
+Then reload udev and restart fprintd like you were always going to:
 
 ```bash
 sudo udevadm control --reload-rules
@@ -266,6 +303,12 @@ Fingerprints for user <you> on ELAN Fingerprint Sensor (press):
 If you previously got "ElanTech Fingerprint Sensor" with a protocol error —
 that was the lying driver. **"ELAN Fingerprint Sensor"** (no "Tech") means the
 TOD driver is in charge now and actually telling the truth.
+
+If `fprintd-verify` instead just sits there for ~30 seconds and times out
+without ever reading your finger, go back to Step 7 — the udev override rule
+is missing or wasn't reloaded. This is also exactly what causes the
+"fingerprint prompt shows up in `sudo`/SDDM/`hyprlock` but always falls back
+to your password" symptom from Step 10.
 
 ### Step 9: Install a polkit agent (or enrollment won't even start)
 
@@ -342,6 +385,19 @@ explicitly matches `04f3:0c4b` and forces libfprint to load it via the
 If your device ID **is** in the `elanmoc` driver's `id_table`
 (`libfprint/drivers/elanmoc/elanmoc.c`), plain `libfprint`/`fprintd` from the
 official repos should "just work" and you can close this tab.
+
+### Why fingerprint login (SDDM/sudo/hyprlock) times out even after Step 6
+
+Because `libfprint-2-tod1-elan`'s udev rule ships fully commented out (see
+Step 7), the `LIBFPRINT_DRIVER=Elan Fingerprint Sensor` hint that's the entire
+point of this package never gets applied to the device. Manual
+`fprintd-list`/`fprintd-enroll`/`fprintd-verify` right after install can look
+fine because they're mostly reading stored print data, not doing live hardware
+I/O. But every PAM-driven verify (SDDM greeter, `sudo`, `hyprlock`) hangs for
+the full ~30s timeout and falls back to your password, with `journalctl -u
+fprintd` showing repeated `g_usb_device_bulk_transfer_finish failed: transfer
+timed out` — the broken `elan` driver got probed for the actual scan instead
+of the TOD one. Step 7 has the override rule that fixes this.
 
 ### Why `libfprint-tod-git` fails to build
 

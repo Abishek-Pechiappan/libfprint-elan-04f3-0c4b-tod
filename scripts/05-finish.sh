@@ -1,6 +1,12 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+echo "==> Fixing the udev rule the package ships commented out..."
+sudo tee /etc/udev/rules.d/60-libfprint-2-tod1-elan.rules > /dev/null <<'EOF'
+SUBSYSTEM=="usb", ATTRS{idVendor}=="04f3", ATTRS{idProduct}=="0c4b", ATTRS{dev}=="*", TEST=="power/control", ATTR{power/control}="auto", MODE="0660", GROUP="plugdev"
+SUBSYSTEM=="usb", ATTRS{idVendor}=="04f3", ATTRS{idProduct}=="0c4b", ENV{LIBFPRINT_DRIVER}="Elan Fingerprint Sensor"
+EOF
+
 echo "==> Reloading udev rules..."
 sudo udevadm control --reload-rules
 sudo udevadm trigger --subsystem-match=usb
