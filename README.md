@@ -1,4 +1,4 @@
-# Getting the ELAN 04f3:0c4b Fingerprint Reader to Stop Being a Liar (Arch + Hyprland)
+# Getting the ELAN 04f3:0c4b Fingerprint Reader (Arch + Hyprland)
 
 So you bought a laptop with a fingerprint reader, you're running Arch like a
 responsible adult, and `fprintd-enroll` just... doesn't work. Cool. Cool cool
