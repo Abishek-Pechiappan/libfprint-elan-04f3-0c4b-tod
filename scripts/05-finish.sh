@@ -31,11 +31,11 @@ esac
 cat <<'EOF'
 
 ==============================================================
-Driver setup is done. Two OPTIONAL steps from the README were
-NOT applied automatically (they touch system auth / personal
-config files - review before applying):
+Driver setup is done. Two OPTIONAL steps were NOT applied
+automatically (they touch system auth / personal config files
+- review before applying):
 
---- Step 9: Polkit agent ---
+--- Polkit agent ---
 Needed if fprintd-enroll/verify fails with PermissionDenied,
 typically on bare WMs like Hyprland (DEs usually have one already):
 
@@ -46,7 +46,7 @@ hl.on("hyprland.start", function() ... end)):
 
   hl.exec_cmd("/usr/lib/hyprpolkitagent/hyprpolkitagent")
 
---- Step 10: PAM integration (fingerprint for sudo/login/hyprlock) ---
+--- PAM integration (fingerprint for sudo/login/hyprlock) ---
 
   sudo sed -i '/^auth.*pam_faillock.so.*preauth/i auth       sufficient                  pam_fprintd.so' /etc/pam.d/system-auth
 
@@ -55,6 +55,7 @@ Test with:
   fprintd-verify
   hyprlock
 
-See the main README for full details on both steps.
+See the "Use your finger instead of your password" section of
+the README for full details on both steps.
 ==============================================================
 EOF

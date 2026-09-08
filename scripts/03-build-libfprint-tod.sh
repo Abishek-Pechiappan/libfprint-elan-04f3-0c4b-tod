@@ -37,7 +37,7 @@ if ! meson setup build \
     echo
     echo "ERROR: meson setup failed - one of the -D options above is likely"
     echo "unrecognized on this branch. Fall back to the manual yay-based"
-    echo "Steps 2-5 in the main README, which don't hardcode meson options."
+    echo "Steps 2-5 in docs/MANUAL-INSTALL.md, which do not hardcode meson options."
     exit 1
 fi
 
