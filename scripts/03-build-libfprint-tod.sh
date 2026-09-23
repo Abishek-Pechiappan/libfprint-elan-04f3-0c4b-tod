@@ -27,13 +27,11 @@ echo "==> Configuring build (LTO disabled, TOD enabled)..."
 if ! meson setup build \
     --prefix=/usr --sysconfdir=/etc --localstatedir=/var --buildtype=plain \
     -Db_lto=false \
-    -Dtod=enabled \
-    -Ddoc=disabled \
-    -Dintrospection=disabled \
-    -Dx11_examples=disabled \
-    -Dgtk_examples=disabled \
-    -Dvapi=disabled \
-    -Dtests=disabled; then
+    -Dtod=true \
+    -Ddoc=false \
+    -Dintrospection=false \
+    -Dgtk-examples=false \
+    -Dinstalled-tests=false; then
     echo
     echo "ERROR: meson setup failed - one of the -D options above is likely"
     echo "unrecognized on this branch. Fall back to the manual yay-based"
