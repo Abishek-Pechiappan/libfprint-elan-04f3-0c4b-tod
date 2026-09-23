@@ -28,7 +28,7 @@ arch = x86_64
 license = custom
 group = fprint
 depend = libfprint-tod
-depend = libcrypto.so=1.1
+depend = openssl
 EOF
 
 echo "==> Packaging..."
