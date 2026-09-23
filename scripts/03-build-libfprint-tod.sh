@@ -19,9 +19,9 @@ echo "==> Applying patch..."
 git apply "$PATCH_FILE"
 
 # Strip -flto=auto from any inherited build flags so it isn't reintroduced
-export CFLAGS="${CFLAGS//-flto=auto/}"
-export CXXFLAGS="${CXXFLAGS//-flto=auto/}"
-export LDFLAGS="${LDFLAGS//-flto=auto/}"
+export CFLAGS="${CFLAGS:-}"; export CFLAGS="${CFLAGS//-flto=auto/}"
+export CXXFLAGS="${CXXFLAGS:-}"; export CXXFLAGS="${CXXFLAGS//-flto=auto/}"
+export LDFLAGS="${LDFLAGS:-}"; export LDFLAGS="${LDFLAGS//-flto=auto/}"
 
 echo "==> Configuring build (LTO disabled, TOD enabled)..."
 if ! meson setup build \
